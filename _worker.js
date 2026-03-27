@@ -296,7 +296,7 @@ export default {
                             const 传输协议 = config_JSON.传输协议 === 'xhttp' ? 'xhttp&mode=stream-one' : (config_JSON.传输协议 === 'grpc' ? (config_JSON.gRPC模式 === 'multi' ? 'grpc&mode=multi' : 'grpc&mode=gun') : 'ws');
                             let 路径字段名 = 'path', 域名字段名 = 'host';
                             if (config_JSON.传输协议 === 'grpc') 路径字段名 = 'serviceName', 域名字段名 = 'authority';
-                            订阅内容 = 其他节点LINK + 完整优选IP.map((原始地址, index) => {
+                            订阅内容 = 其他节点LINK + 完整优选IP.map(原始地址 => {
                                 // 统一正则: 匹配 域名/IPv4/IPv6地址 + 可选端口 + 可选备注
                                 // 示例: 
                                 //   - 域名: hj.xmm1993.top:2096#备注 或 example.com
@@ -310,10 +310,7 @@ export default {
                                 if (match) {
                                     节点地址 = match[1];  // IP地址或域名(可能带方括号)
                                     节点端口 = match[2] || "443";  // 端口,默认443
-                                    // 提取原备注，并在末尾加上 01, 02 这样的格式化序号
-							        let 原备注 = match[3] || 节点地址;
-							        let 序号 = String(index + 1).padStart(2, '0');
-							        节点备注 = `${原备注} ${序号}`;
+                                    节点备注 = match[3] || 节点地址;  // 备注,默认为地址本身
                                 } else {
                                     // 不规范的格式，跳过处理返回null
                                     console.warn(`[订阅内容] 不规范的IP格式已忽略: ${原始地址}`);
